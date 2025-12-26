@@ -27,6 +27,10 @@ import argparse
 from pathlib import Path
 from typing import Optional
 
+# Add src directory to path to import common module
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from common import Colors
+
 
 # Configuración del dataset
 GOOGLE_DRIVE_FILE_ID = "1ig2ngoXFTxP5Pa8muXo02mDTFexZzsis"
@@ -53,8 +57,8 @@ def download_from_google_drive(
     try:
         import gdown
     except ImportError:
-        print("❌ Error: gdown no está instalado.")
-        print("   Instala las dependencias con: pip install -r requirements.txt")
+        print(f"{Colors.RED}Error: gdown is not installed{Colors.RESET}")
+        print(f"{Colors.CYAN}Install dependencies with: pip install -r requirements.txt{Colors.RESET}")
         return False
 
     try:
@@ -62,8 +66,8 @@ def download_from_google_drive(
         url = f"https://drive.google.com/uc?id={file_id}"
 
         if not quiet:
-            print(f"📥 Descargando dataset desde Google Drive...")
-            print(f"   Destino: {output_path}")
+            print(f"Downloading dataset from Google Drive...")
+            print(f"  Destination: {output_path}")
 
         # Descargar archivo
         gdown.download(url, str(output_path), quiet=quiet)
@@ -71,8 +75,66 @@ def download_from_google_drive(
         return True
 
     except Exception as e:
-        print(f"❌ Error durante la descarga: {e}")
+        print(f"{Colors.RED}Error during download: {e}{Colors.RESET}")
         return False
+
+
+def extract_if_zip(file_path: Path) -> Path:
+    """
+    Extrae el archivo si es un ZIP y retorna la ruta del archivo extraído.
+
+    Args:
+        file_path: Ruta al archivo descargado
+
+    Returns:
+        Ruta al archivo JSON (extraído si era ZIP, original si no)
+    """
+    import zipfile
+
+    # Verificar si es un archivo ZIP
+    if not zipfile.is_zipfile(file_path):
+        return file_path
+
+    print(f"  {Colors.CYAN}Detected ZIP archive, extracting...{Colors.RESET}")
+
+    try:
+        with zipfile.ZipFile(file_path, 'r') as zip_ref:
+            # Listar archivos en el ZIP
+            file_list = zip_ref.namelist()
+
+            if len(file_list) == 0:
+                print(f"  {Colors.RED}Error: ZIP file is empty{Colors.RESET}")
+                return file_path
+
+            # Buscar archivo JSON
+            json_file = None
+            for name in file_list:
+                if name.endswith('.json'):
+                    json_file = name
+                    break
+
+            if not json_file:
+                print(f"  {Colors.YELLOW}Warning: No JSON file found in ZIP{Colors.RESET}")
+                # Extraer el primer archivo
+                json_file = file_list[0]
+
+            # Extraer el archivo
+            output_dir = file_path.parent
+            zip_ref.extract(json_file, output_dir)
+            extracted_path = output_dir / json_file
+
+            print(f"  {Colors.GREEN}Extracted: {json_file}{Colors.RESET}")
+
+            # Renombrar el ZIP original
+            zip_backup = file_path.with_suffix(file_path.suffix + '.zip')
+            file_path.rename(zip_backup)
+            print(f"  {Colors.CYAN}ZIP archived as: {zip_backup.name}{Colors.RESET}")
+
+            return extracted_path
+
+    except Exception as e:
+        print(f"  {Colors.RED}Error extracting ZIP: {e}{Colors.RESET}")
+        return file_path
 
 
 def validate_download(file_path: Path) -> bool:
@@ -87,18 +149,18 @@ def validate_download(file_path: Path) -> bool:
     """
     # Verificar que el archivo existe
     if not file_path.exists():
-        print(f"❌ Error: El archivo no existe en {file_path}")
+        print(f"{Colors.RED}Error: File does not exist at {file_path}{Colors.RESET}")
         return False
 
     # Verificar que el archivo no está vacío
     file_size = file_path.stat().st_size
     if file_size == 0:
-        print(f"❌ Error: El archivo está vacío")
+        print(f"{Colors.RED}Error: File is empty{Colors.RESET}")
         return False
 
     # Mostrar tamaño del archivo
     size_mb = file_size / (1024 * 1024)
-    print(f"✅ Archivo descargado: {size_mb:.2f} MB")
+    print(f"  {Colors.GREEN}File downloaded: {size_mb:.2f} MB{Colors.RESET}")
 
     # Verificar que es un archivo JSON válido (al menos que empiece con [ o {)
     # Intentar con diferentes encodings ya que el dataset tiene emojis y caracteres especiales
@@ -114,21 +176,21 @@ def validate_download(file_path: Path) -> bool:
             continue
 
     if not json_valid:
-        print(f"⚠️  Advertencia: No se pudo validar el formato del archivo")
-        print(f"   El archivo existe y tiene contenido, pero la validación falló")
-        print(f"   Esto puede ser normal si el dataset tiene caracteres especiales")
+        print(f"  {Colors.YELLOW}Warning: Could not validate file format{Colors.RESET}")
+        print(f"  {Colors.YELLOW}File exists and has content, validation failed{Colors.RESET}")
+        print(f"  {Colors.YELLOW}This may be normal if dataset has special characters{Colors.RESET}")
         # No retornar False aquí, solo advertir
     else:
-        print(f"✅ Formato JSON validado correctamente")
+        print(f"  {Colors.GREEN}JSON format validated successfully{Colors.RESET}")
 
     # Contar líneas aproximadas (opcional, puede ser lento para archivos grandes)
     try:
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
             line_count = sum(1 for _ in f)
-        print(f"📊 Líneas en el archivo: {line_count:,}")
+        print(f"  {Colors.CYAN}Lines in file: {line_count:,}{Colors.RESET}")
     except Exception:
         # Si falla, no es crítico - el archivo tiene caracteres especiales
-        print(f"ℹ️  No se pudo contar líneas (archivo con caracteres especiales)")
+        print(f"  {Colors.YELLOW}Could not count lines (file has special characters){Colors.RESET}")
 
     return True
 
@@ -154,9 +216,9 @@ def main(output_dir: Optional[str] = None, quiet: bool = False) -> int:
     try:
         output_path.mkdir(parents=True, exist_ok=True)
         if not quiet:
-            print(f"📁 Directorio de salida: {output_path.absolute()}")
+            print(f"Output directory: {output_path.absolute()}")
     except Exception as e:
-        print(f"❌ Error al crear directorio {output_path}: {e}")
+        print(f"{Colors.RED}Error creating directory {output_path}: {e}{Colors.RESET}")
         return 1
 
     # Ruta completa del archivo
@@ -164,18 +226,18 @@ def main(output_dir: Optional[str] = None, quiet: bool = False) -> int:
 
     # Verificar si el archivo ya existe
     if file_path.exists():
-        print(f"⚠️  El archivo ya existe: {file_path}")
-        response = input("   ¿Deseas descargarlo nuevamente? (s/n): ").strip().lower()
-        if response not in ['s', 'si', 'sí', 'y', 'yes']:
-            print("   Operación cancelada.")
+        print(f"{Colors.YELLOW}File already exists: {file_path}{Colors.RESET}")
+        response = input("  Do you want to download it again? (y/n): ").strip().lower()
+        if response not in ['y', 'yes', 's', 'si', 'sí']:
+            print("  Operation cancelled.")
             return 0
-        print("   Reemplazando archivo existente...")
+        print("  Replacing existing file...")
 
     # Descargar archivo
     if not quiet:
         print("\n" + "="*60)
-        print("  Iniciando descarga del dataset")
-        print("="*60)
+        print("  Starting dataset download")
+        print("="*60 + "\n")
 
     success = download_from_google_drive(
         file_id=GOOGLE_DRIVE_FILE_ID,
@@ -184,26 +246,35 @@ def main(output_dir: Optional[str] = None, quiet: bool = False) -> int:
     )
 
     if not success:
-        print("\n❌ La descarga falló. Verifica tu conexión a internet e intenta nuevamente.")
+        print(f"\n{Colors.RED}Download failed. Check your internet connection and try again.{Colors.RESET}")
         return 1
+
+    # Extraer si es ZIP
+    if not quiet:
+        print("\nChecking file type...")
+
+    extracted_path = extract_if_zip(file_path)
 
     # Validar descarga
     if not quiet:
-        print("\n🔍 Validando descarga...")
+        print("\nValidating file...")
 
-    if not validate_download(file_path):
-        print("\n❌ La validación del archivo falló.")
-        print("   El archivo podría estar corrupto o incompleto.")
-        print("   Intenta descargar nuevamente.")
+    if not validate_download(extracted_path):
+        print(f"\n{Colors.RED}File validation failed.{Colors.RESET}")
+        print(f"{Colors.YELLOW}The file might be corrupted or incomplete.{Colors.RESET}")
+        print(f"{Colors.YELLOW}Try downloading again.{Colors.RESET}")
         return 1
+
+    # Actualizar file_path para el mensaje final
+    file_path = extracted_path
 
     # Éxito
     if not quiet:
         print("\n" + "="*60)
-        print("✅ Descarga completada exitosamente")
+        print(f"{Colors.GREEN}Download completed successfully{Colors.RESET}")
         print("="*60)
-        print(f"\n📍 Dataset guardado en: {file_path.absolute()}")
-        print(f"\n💡 Recuerda: El dataset NO debe subirse a git (ya está en .gitignore)")
+        print(f"\nDataset saved at: {file_path.absolute()}")
+        print(f"\n{Colors.CYAN}Note: Dataset is NOT tracked in git (already in .gitignore){Colors.RESET}")
 
     return 0
 
@@ -211,18 +282,18 @@ def main(output_dir: Optional[str] = None, quiet: bool = False) -> int:
 if __name__ == "__main__":
     # Configurar argumentos de línea de comandos
     parser = argparse.ArgumentParser(
-        description="Descarga el dataset del LATAM Data Engineer Challenge"
+        description="Download dataset for LATAM Data Engineer Challenge"
     )
     parser.add_argument(
         "--output-dir",
         type=str,
         default=None,
-        help=f"Directorio donde guardar el dataset (default: {DEFAULT_OUTPUT_DIR})"
+        help=f"Directory to save dataset (default: {DEFAULT_OUTPUT_DIR})"
     )
     parser.add_argument(
         "--quiet",
         action="store_true",
-        help="Minimizar mensajes de salida"
+        help="Minimize output messages"
     )
 
     args = parser.parse_args()

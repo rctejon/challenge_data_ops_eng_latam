@@ -149,7 +149,9 @@ pip install -r requirements.txt
 
 # 2. Descargar dataset (~398 MB desde Google Drive)
 python src/dataset/download_dataset.py
-```
 
+# 3. Profiling del dataset (opcional, recomendado)
+python src/dataset/dataset_profile.py
+```
 
 ---

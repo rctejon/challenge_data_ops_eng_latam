@@ -3,6 +3,7 @@ data/
 *.json
 *.csv
 *.parquet
+*.zip
 farmers-protest-tweets-*
 
 # Python
