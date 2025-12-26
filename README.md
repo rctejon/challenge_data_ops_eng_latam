@@ -126,8 +126,7 @@ Incluye:
 
 | Fase | Área | Tarea | Rama | Documentación |
 |------|------|-------|------|---------------|
-| 1 | Diseño | Decisiones técnicas y stack | `develop` | README |
-| 2 | Scaffold | `.gitignore` | `feature/scaffold-gitignore` | README |
+| 1 | Diseño | Decisiones técnicas y stack | `main` | README |
 | 2 | Scaffold | Descarga del dataset | `feature/scaffold-dataset-download` | README |
 | 2 | Scaffold | Profiling del dataset | `feature/scaffold-dataset-profile` | `src/dataset/dataset_profile.ipynb` |
 | 3 | Q1 | Análisis TIME (notebook) | `feature/q1-notebook-time` | `src/q1/q1.ipynb` |
@@ -142,35 +141,15 @@ Incluye:
 
 ---
 
-## Profiling y métricas
+## Setup y Ejecución
 
-- Tiempo de ejecución:
-  - `cProfile` integrado en los notebooks.
-  - Métricas como tiempo total, funciones más costosas y throughput.
-- Uso de memoria:
-  - `memory-profiler` para evolución y pico.
-  - `memray` para análisis profundo de asignaciones.
-- El profiling se utiliza como herramienta de diseño, no solo como validación final.
+```bash
+# 1. Instalar dependencias
+pip install -r requirements.txt
 
----
+# 2. Descargar dataset (~398 MB desde Google Drive)
+python src/dataset/download_dataset.py
+```
 
-## Supuestos generales
-
-- El dataset está en formato JSON Lines, un tweet por línea.
-- Los campos `date`, `content`, `user.username` y `mentionedUsers` pueden contener valores faltantes.
-- Los registros inválidos se omiten explícitamente y se contabilizan.
-- Las fechas se agrupan a nivel de día en UTC.
-- Los emojis se detectan con máxima precisión, incluyendo secuencias compuestas.
 
 ---
-
-## Posibles mejoras futuras
-
-- Conversión opcional del dataset a Parquet para benchmarks adicionales.
-- Paralelización del enfoque streaming.
-- Uso de DuckDB para consultas analíticas.
-- Automatización del profiling en flujos de CI locales.
-
----
-
-Este README documenta tanto la solución como el proceso seguido, permitiendo al evaluador entender claramente las decisiones técnicas, el razonamiento y los resultados obtenidos.
