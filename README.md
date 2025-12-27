@@ -133,17 +133,14 @@ Incluye:
 | 3.2 | 3 | Q1 | Análisis MEMORY (notebook) | `feature/q1-notebook-memory` | `src/q1/q1.ipynb` |
 | 3.3 | 3 | Q1 | Implementación TIME | `feature/q1-time-impl` | `src/q1/q1.md` |
 | 3.4 | 3 | Q1 | Implementación MEMORY | `feature/q1-memory-impl` | `src/q1/q1.md` |
-| 3.5 | 3 | Q1 | Documentación final | `docs/q1` | `src/q1/q1.md` |
-| 3.6 | 3 | Q2 | Análisis TIME (notebook) | `feature/q2-notebook-time` | `src/q2/q2.ipynb` |
-| 3.7 | 3 | Q2 | Análisis MEMORY (notebook) | `feature/q2-notebook-memory` | `src/q2/q2.ipynb` |
-| 3.8 | 3 | Q2 | Implementación TIME | `feature/q2-time-impl` | `src/q2/q2.md` |
-| 3.9 | 3 | Q2 | Implementación MEMORY | `feature/q2-memory-impl` | `src/q2/q2.md` |
-| 3.10 | 3 | Q2 | Documentación final | `docs/q2` | `src/q2/q2.md` |
-| 3.11 | 3 | Q3 | Análisis TIME (notebook) | `feature/q3-notebook-time` | `src/q3/q3.ipynb` |
-| 3.12 | 3 | Q3 | Análisis MEMORY (notebook) | `feature/q3-notebook-memory` | `src/q3/q3.ipynb` |
-| 3.13 | 3 | Q3 | Implementación TIME | `feature/q3-time-impl` | `src/q3/q3.md` |
-| 3.14 | 3 | Q3 | Implementación MEMORY | `feature/q3-memory-impl` | `src/q3/q3.md` |
-| 3.15 | 3 | Q3 | Documentación final | `docs/q3` | `src/q3/q3.md` |
+| 3.5 | 3 | Q2 | Análisis TIME (notebook) | `feature/q2-notebook-time` | `src/q2/q2.ipynb` |
+| 3.6 | 3 | Q2 | Análisis MEMORY (notebook) | `feature/q2-notebook-memory` | `src/q2/q2.ipynb` |
+| 3.7 | 3 | Q2 | Implementación TIME | `feature/q2-time-impl` | `src/q2/q2.md` |
+| 3.8 | 3 | Q2 | Implementación MEMORY | `feature/q2-memory-impl` | `src/q2/q2.md` |
+| 3.9 | 3 | Q3 | Análisis TIME (notebook) | `feature/q3-notebook-time` | `src/q3/q3.ipynb` |
+| 3.10 | 3 | Q3 | Análisis MEMORY (notebook) | `feature/q3-notebook-memory` | `src/q3/q3.ipynb` |
+| 3.11 | 3 | Q3 | Implementación TIME | `feature/q3-time-impl` | `src/q3/q3.md` |
+| 3.12 | 3 | Q3 | Implementación MEMORY | `feature/q3-memory-impl` | `src/q3/q3.md` |
 | 4.1 | 4 | Entrega | Documentación global | `docs/final` | README |
 | 4.2 | 4 | Entrega | Release final | `main` | README |
 
