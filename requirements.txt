@@ -5,3 +5,4 @@ pandas>=2.0.0
 emoji>=2.8.0
 polars>=0.20.0
 psutil>=5.9.0
+memray
