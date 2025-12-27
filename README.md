@@ -128,19 +128,19 @@ Incluye:
 |------|------|------|-------|------|---------------|
 | 1.1 | 1 | Diseño | Decisiones técnicas y stack | `main` | README |
 | 2.1 | 2 | Scaffold | Descarga del dataset | `feature/scaffold-dataset-download` | README |
-| 2.2 | 2 | Scaffold | Profiling del dataset | `feature/scaffold-dataset-profile` | `src/dataset/dataset_profile.ipynb` |
-| 3.1 | 3 | Q1 | Análisis TIME (notebook) | `feature/q1-notebook-time` | `src/q1/q1.ipynb` |
-| 3.2 | 3 | Q1 | Análisis MEMORY (notebook) | `feature/q1-notebook-memory` | `src/q1/q1.ipynb` |
-| 3.3 | 3 | Q1 | Implementación TIME | `feature/q1-time-impl` | `src/q1/q1.md` |
-| 3.4 | 3 | Q1 | Implementación MEMORY | `feature/q1-memory-impl` | `src/q1/q1.md` |
-| 3.5 | 3 | Q2 | Análisis TIME (notebook) | `feature/q2-notebook-time` | `src/q2/q2.ipynb` |
-| 3.6 | 3 | Q2 | Análisis MEMORY (notebook) | `feature/q2-notebook-memory` | `src/q2/q2.ipynb` |
-| 3.7 | 3 | Q2 | Implementación TIME | `feature/q2-time-impl` | `src/q2/q2.md` |
-| 3.8 | 3 | Q2 | Implementación MEMORY | `feature/q2-memory-impl` | `src/q2/q2.md` |
-| 3.9 | 3 | Q3 | Análisis TIME (notebook) | `feature/q3-notebook-time` | `src/q3/q3.ipynb` |
-| 3.10 | 3 | Q3 | Análisis MEMORY (notebook) | `feature/q3-notebook-memory` | `src/q3/q3.ipynb` |
-| 3.11 | 3 | Q3 | Implementación TIME | `feature/q3-time-impl` | `src/q3/q3.md` |
-| 3.12 | 3 | Q3 | Implementación MEMORY | `feature/q3-memory-impl` | `src/q3/q3.md` |
+| 2.2 | 2 | Scaffold | Profiling del dataset | `feature/scaffold-dataset-profile` | [`src/dataset/dataset_profile.ipynb`](src/dataset/dataset_profile.ipynb) |
+| 3.1 | 3 | Q1 | Análisis TIME (notebook) | `feature/q1-notebook-time` | [`src/q1/q1.ipynb`](src/q1/q1.ipynb) |
+| 3.2 | 3 | Q1 | Análisis MEMORY (notebook) | `feature/q1-notebook-memory` | [`src/q1/q1.ipynb`](src/q1/q1.ipynb) |
+| 3.3 | 3 | Q1 | Implementación TIME | `feature/q1-time-impl` | [`src/q1/q1.md`](src/q1/q1.md) |
+| 3.4 | 3 | Q1 | Implementación MEMORY | `feature/q1-memory-impl` | [`src/q1/q1.md`](src/q1/q1.md) |
+| 3.5 | 3 | Q2 | Análisis TIME (notebook) | `feature/q2-notebook-time` | [`src/q2/q2.ipynb`](src/q2/q2.ipynb) |
+| 3.6 | 3 | Q2 | Análisis MEMORY (notebook) | `feature/q2-notebook-memory` | [`src/q2/q2.ipynb`](src/q2/q2.ipynb) |
+| 3.7 | 3 | Q2 | Implementación TIME | `feature/q2-time-impl` | [`src/q2/q2.md`](src/q2/q2.md) |
+| 3.8 | 3 | Q2 | Implementación MEMORY | `feature/q2-memory-impl` | [`src/q2/q2.md`](src/q2/q2.md) |
+| 3.9 | 3 | Q3 | Análisis TIME (notebook) | `feature/q3-notebook-time` | [`src/q3/q3.ipynb`](src/q3/q3.ipynb) |
+| 3.10 | 3 | Q3 | Análisis MEMORY (notebook) | `feature/q3-notebook-memory` | [`src/q3/q3.ipynb`](src/q3/q3.ipynb) |
+| 3.11 | 3 | Q3 | Implementación TIME | `feature/q3-time-impl` | [`src/q3/q3.md`](src/q3/q3.md) |
+| 3.12 | 3 | Q3 | Implementación MEMORY | `feature/q3-memory-impl` | [`src/q3/q3.md`](src/q3/q3.md) |
 | 4.1 | 4 | Entrega | Documentación global | `docs/final` | README |
 | 4.2 | 4 | Entrega | Release final | `main` | README |
 
@@ -158,5 +158,70 @@ python src/dataset/download_dataset.py
 # 3. Profiling del dataset (opcional, recomendado)
 python src/dataset/dataset_profile.py
 ```
+
+---
+
+## Proceso de Desarrollo y Documentación
+
+Cada pregunta (Q1, Q2, Q3) sigue un proceso riguroso de experimentación, análisis y documentación:
+
+### 1. Experimentación en Notebooks
+
+Antes de implementar cualquier solución, se realiza **experimentación exhaustiva en Jupyter notebooks** para evaluar diferentes enfoques:
+
+- **Exploración de múltiples implementaciones**: Se prueban diferentes bibliotecas (Polars, Pandas) y estrategias (in-memory, streaming, chunked processing)
+- **Comparación de performance**: Benchmarks de tiempo de ejecución (con 3+ runs para capturar variabilidad)
+- **Análisis de memoria**: Medición de consumo de RAM (RSS delta) para cada enfoque
+- **Profiling detallado**: cProfile para identificar bottlenecks de tiempo
+- **Verificación de correctitud**: Validación de que todos los enfoques producen resultados idénticos
+- **Análisis de trade-offs**: Evaluación de cuándo usar cada estrategia según el tamaño del dataset y recursos disponibles
+
+**Notebooks por pregunta:**
+- [Q1 - Notebook de experimentación](src/q1/q1.ipynb) - 4 enfoques comparados (Polars TIME, Pandas TIME, Polars MEMORY, Pandas MEMORY)
+- [Q2 - Notebook de experimentación](src/q2/q2.ipynb) - Análisis TIME vs MEMORY
+- [Q3 - Notebook de experimentación](src/q3/q3.ipynb) - Análisis TIME vs MEMORY
+
+### 2. Implementación de Scripts
+
+Basándose en los resultados del notebook, se implementan **scripts productivos** con las mejores soluciones:
+
+- **Función pura** (`q*_time.py`, `q*_memory.py`): Solo la función requerida por el challenge, sin logging ni benchmarking
+- **Runner con profiling** (`q*_time_impl.py`, `q*_memory_impl.py`): Ejecución completa con benchmarking reproducible
+
+### 3. Documentación Técnica
+
+Cada pregunta incluye documentación detallada en formato Markdown:
+
+**Documentación por pregunta:**
+- [Q1 - Documentación y guía de ejecución](src/q1/q1.md)
+- [Q2 - Documentación y guía de ejecución](src/q2/q2.md)
+- [Q3 - Documentación y guía de ejecución](src/q3/q3.md)
+
+**Cada documento incluye:**
+- ✅ **Instrucciones de ejecución**: Comandos exactos para ejecutar implementaciones TIME y MEMORY
+- ✅ **Análisis de profiling**: Cómo analizar los resultados con cProfile y memray
+- ✅ **Métricas de performance**: Tiempos de ejecución y uso de memoria medidos
+- ✅ **Resultados esperados**: Top 10 outputs validados
+- ✅ **Trade-offs documentados**: Cuándo usar cada enfoque según el caso de uso
+
+### 4. Ejecución de Soluciones
+
+Para ejecutar las implementaciones finales de cada pregunta:
+
+```bash
+# Q1 - Top 10 fechas con más tweets
+python src/q1/q1_time_impl.py    # Optimizado por velocidad (~0.3s, ~129 MB)
+python src/q1/q1_memory_impl.py  # Optimizado por memoria (~3.4s, ~7 MB)
+
+# Q2 - Top 10 emojis más usados
+python src/q2/q2_time_impl.py    # Optimizado por velocidad
+python src/q2/q2_memory_impl.py  # Optimizado por memoria
+
+# Q3 - Top 10 usuarios más influyentes
+python src/q3/q3_time_impl.py    # Optimizado por velocidad
+python src/q3/q3_memory_impl.py  # Optimizado por memoria
+```
+
+Cada script genera automáticamente archivos de profiling (`.prof` para cProfile, `.bin` para memray) que pueden analizarse posteriormente.
 
 ---
